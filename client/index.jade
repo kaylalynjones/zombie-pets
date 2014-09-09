@@ -12,22 +12,77 @@ html(ng-app='zombie-pets', lang='en')
     .container
       .row
         .col-xs-12
-          h1 {{title}} Fight!
+          h1 {{title}}
       .row
-        .col-xs-4
+        .col-xs-12
+          h3 Fight!
+          #cage(ng-show='player1 && player2')
+            #player1.thumbnail(style='background-image:url("{{player1.photo}}");')
+              .name.text-center {{player1.name}}
+              h6 Weapon: {{player1.weapon.name}}
+              h6 Damage: {{player1.weapon.damage}}
+            a#fight-btn(href='#').btn.btn-lg.btn-danger Fight!
+
+            #player2.thumbnail.pull-right(style='background-image:url("{{player2.photo}}");')
+              .name.text-center {{player2.name}}
+              h6 Weapon: {{player2.weapon.name}}
+              h6 Damage: {{player1.weapon.damage}}
+      .row
+        .col-xs-4.form
           h3 Create Weapon
-          form(role='form', novalidate)
+          button.btn.btn-info.btn-xs.pull-right(ng-click='toggleWeapon()') Toggle Form
+          form(role='form', name='weaponForm', novalidate, ng-hide='hideWeapon')
             .form-group
               label(for='name') Name
-              input.form-control#name(type='text', name='name', autofocus)
+              input.form-control#name(ng-model='weapon.name', ng-minlength='3', ng-maxlength='15' type='text', name='name', required, autofocus)
             .form-group
               label(for='photo') Photo
-              input.form-control#photo(type='text', name='photo')
+              input.form-control#photo(ng-model='weapon.photo', ng-pattern='/^http/', type='text', name='photo', required)
             .form-group
               label(for='damage') Damage
-              input.form-control#damage(type='number', name='damage')
-            button.btn.btn-primary.btn-md(type='submit') Add Weapon
+              input.form-control#damage(ng-model='weapon.damage', type='number', name='damage', required)
+
+            button.btn.btn-primary.btn-md.pull-right(type='submit', ng-click='addWeapon()' ng-show='weaponForm.$valid') Add Weapon
+
+          .col-xs-12.debug-list
+            pre {{weapon | json}}
+            pre {{weapons | json}}
         .col-xs-8
+          .weapon.thumbnail(ng-repeat='w in weapons', style='background-image:url("{{w.photo}}");')
+            .name.text-center {{w.name}}
+              .damage.pull-right {{w.damage}}
+      .row
+        .col-xs-4.form
+          h3 Create Pet
+          button.btn.btn-info.btn-xs.pull-right(ng-click='togglePet()') Toggle Form
+          form(role='form', name='petForm', novalidate, ng-hide='hidePet')
+            .form-group
+              label(for='name') Name
+              input.form-control#petname(ng-model='pet.name', type='text', name='petname', required)
+            .form-group
+              label(for='photo') Photo
+              input.form-control#petphoto(ng-model='pet.photo', ng-pattern='/^http/', type='text', name='petphoto', required)
+            .form-group
+              label(for='damage', type='number', readonly, ng-model='pet.health') Health
+            .form-group
+              label(for='weapon')
+              select(name='weapon', ng-model='pet.weapon')
+                option(ng-repeat='w in weapons', value='{{$index}}') {{w.name}}
+
+            button.btn.btn-primary.btn-md.pull-right(type='submit', ng-click='addPet()' ng-show='petForm.$valid') Add Pet
+
+          .col-xs-12.debug-list
+            pre {{pet | json}}
+            pre {{pets | json}}
+            pre {{player1 | json}}
+            pre {{player2 | json}}
+        .col-xs-8
+          .weapon.thumbnail(ng-repeat='p in pets', style='background-image:url("{{p.photo}}");')
+            .name.text-center {{p.name}}
+              .damage.pull-right {{p.health}}
+            .petname.text-center {{p.weapon.name}}
+            button.btn.btn-xs.btn-warning(ng-click='setPlayer(1)') 1
+            button.btn.btn-xs.btn-warning.pull-right(ng-click='setPlayer(2)') 2
 
     script(src='/vendor/angular/angular.js')
     script(src='/vendor/jquery/dist/jquery.js')
