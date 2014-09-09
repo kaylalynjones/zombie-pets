@@ -1,10 +1,10 @@
 doctype html
-html(ng-app='mean-template', lang='en')
+html(ng-app='zombie-pets', lang='en')
   head
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    title MEAN Template
+    title Zombie Pets
     link(href='/vendor/bootstrap/dist/css/bootstrap.css', rel='stylesheet')
     link(href='/vendor/fontawesome/css/font-awesome.css', rel='stylesheet')
     link(href='/index.css', rel='stylesheet')
@@ -12,13 +12,24 @@ html(ng-app='mean-template', lang='en')
     .container
       .row
         .col-xs-12
-          h1 {{title}}
-          h2
-            span Web Development for &nbsp;
-            em: u {{occupation}}
+          h1 {{title}} Fight!
+      .row
+        .col-xs-4
+          h3 Create Weapon
+          form(role='form', novalidate)
+            .form-group
+              label(for='name') Name
+              input.form-control#name(type='text', name='name', autofocus)
+            .form-group
+              label(for='photo') Photo
+              input.form-control#photo(type='text', name='photo')
+            .form-group
+              label(for='damage') Damage
+              input.form-control#damage(type='number', name='damage')
+            button.btn.btn-primary.btn-md(type='submit') Add Weapon
+        .col-xs-8
 
     script(src='/vendor/angular/angular.js')
     script(src='/vendor/jquery/dist/jquery.js')
     script(src='/vendor/bootstrap/dist/js/bootstrap.js')
     script(src='/index.js')
-
