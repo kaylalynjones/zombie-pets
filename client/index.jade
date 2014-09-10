@@ -17,16 +17,20 @@ html(ng-app='zombie-pets', lang='en')
         .col-xs-12
           h3 Fight!
           #cage(ng-show='player1 && player2')
-            #player1.thumbnail(style='background-image:url("{{player1.photo}}");')
+            #player1.thumbnail(style='background-image:url("{{player1.photo}}");', ng-class='{"zombie": player1.isZombie}')
               .name.text-center {{player1.name}}
               h6 Weapon: {{player1.weapon.name}}
               h6 Damage: {{player1.weapon.damage}}
-            a#fight-btn(href='#').btn.btn-lg.btn-danger Fight!
+              .progress
+                div.progress-bar(role='progressbar', ng-class='{"progress-bar-danger": player1.health <= 10}', aria-valuenow='{{player1.health}}', aria-valuemin='0', aria-valuemax='100', style='width: {{player1.health}}%;')
+            a#fight-btn(href='#' ng-click='fight()').btn.btn-lg.btn-danger Fight!
 
-            #player2.thumbnail.pull-right(style='background-image:url("{{player2.photo}}");')
+            #player2.thumbnail.pull-right(style='background-image:url("{{player2.photo}}");', ng-class='{"zombie": player2.isZombie}')
               .name.text-center {{player2.name}}
               h6 Weapon: {{player2.weapon.name}}
-              h6 Damage: {{player1.weapon.damage}}
+              h6 Damage: {{player2.weapon.damage}}
+              .progress
+                .progress-bar(role='progressbar', ng-class='{"progress-bar-danger": player2.health <= 10}', aria-valuenow='{{player2.health}}', aria-valuemin='0', aria-valuemax='100', style='width: {{player2.health}}%;')
       .row
         .col-xs-4.form
           h3 Create Weapon
@@ -63,7 +67,7 @@ html(ng-app='zombie-pets', lang='en')
               label(for='photo') Photo
               input.form-control#petphoto(ng-model='pet.photo', ng-pattern='/^http/', type='text', name='petphoto', required)
             .form-group
-              label(for='damage', type='number', readonly, ng-model='pet.health') Health
+              label(for='damage', type='number', readonly, ng-model='pet.health') Health 100
             .form-group
               label(for='weapon')
               select(name='weapon', ng-model='pet.weapon')
@@ -79,7 +83,6 @@ html(ng-app='zombie-pets', lang='en')
         .col-xs-8
           .weapon.thumbnail(ng-repeat='p in pets', style='background-image:url("{{p.photo}}");')
             .name.text-center {{p.name}}
-              .damage.pull-right {{p.health}}
             .petname.text-center {{p.weapon.name}}
             button.btn.btn-xs.btn-warning(ng-click='setPlayer(1)') 1
             button.btn.btn-xs.btn-warning.pull-right(ng-click='setPlayer(2)') 2
